@@ -29,7 +29,7 @@ const AdminPage = () => {
   const [contactLinkForm, setContactLinkForm] = useState({ label: '', href: '', icon: 'github' });
   const [certificateForm, setCertificateForm] = useState({ name: '', duration: '', link: '', image: '' });
   const [dataLoading, setDataLoading] = useState(false);
-  const [projectForm, setProjectForm] = useState({ name: '', description: '', technologies: '', demo: '', github: '' });
+  const [projectForm, setProjectForm] = useState({ name: '', description: '', technologies: '', demo: '', github: '', image: '' });
   const [experienceForm, setExperienceForm] = useState({ position: '', company: '', duration: '', description: '', logo: '' });
 
   useEffect(() => {
@@ -190,10 +190,57 @@ const AdminPage = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        setCertificateForm({ ...certificateForm, image: event.target.result });
+        compressImage(event.target.result, 900, 700, 0.78, (compressedDataUrl) => {
+          setCertificateForm({ ...certificateForm, image: compressedDataUrl });
+        });
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleProjectImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        compressImage(event.target.result, 900, 700, 0.78, (compressedDataUrl) => {
+          setProjectForm({ ...projectForm, image: compressedDataUrl });
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Function to compress image
+  const compressImage = (dataUrl, maxWidth, maxHeight, quality, callback) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      // Calculate new dimensions
+      let { width, height } = img;
+      if (width > height) {
+        if (width > maxWidth) {
+          height = (height * maxWidth) / width;
+          width = maxWidth;
+        }
+      } else {
+        if (height > maxHeight) {
+          width = (width * maxHeight) / height;
+          height = maxHeight;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+
+      // Draw and compress
+      ctx.drawImage(img, 0, 0, width, height);
+      const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+      callback(compressedDataUrl);
+    };
+    img.src = dataUrl;
   };
 
   const openCertificateForm = (certificate = null) => {
@@ -316,11 +363,12 @@ const AdminPage = () => {
         description: project.description || '',
         technologies: project.technologies ? project.technologies.join(', ') : '',
         demo: project.demo || '',
-        github: project.github || ''
+        github: project.github || '',
+        image: project.image || ''
       });
       setEditingProject(project);
     } else {
-      setProjectForm({ name: '', description: '', technologies: '', demo: '', github: '' });
+      setProjectForm({ name: '', description: '', technologies: '', demo: '', github: '', image: '' });
       setEditingProject(null);
     }
     setShowProjectForm(true);
@@ -904,6 +952,20 @@ const AdminPage = () => {
                     placeholder="https://github.com/username/repo"
                     className="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Project Image (optional)</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleProjectImageUpload}
+                    className="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  />
+                  {projectForm.image && (
+                    <div className="mt-3">
+                      <img src={projectForm.image} alt="Project preview" className="h-32 w-full object-cover rounded-lg" />
+                    </div>
+                  )}
                 </div>
                 <div className="flex gap-3 pt-4">
                   <button

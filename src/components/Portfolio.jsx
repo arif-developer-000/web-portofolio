@@ -11,7 +11,7 @@ function Portfolio() {
     const loadProjects = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, 'projects'));
-        setProjects(querySnapshot.docs.map(doc => doc.data()));
+        setProjects(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
       } catch (error) {
         console.error('Error loading projects:', error);
       }
@@ -33,7 +33,7 @@ function Portfolio() {
           {loading ? (
             Array.from({ length: 3 }).map((_, index) => (
               <div key={index} className="animate-pulse overflow-hidden rounded-2xl sm:rounded-3xl border border-slate-300 dark:border-white/10 bg-white dark:bg-slate-900/70 shadow-soft flex flex-col h-full">
-                <div className="h-40 sm:h-48 md:h-56 bg-slate-200 dark:bg-slate-700"></div>
+                <div className="h-40 sm:h-48 md:h-56 bg-slate-200 dark:bg-slate-700 flex-shrink-0"></div>
                 <div className="space-y-3 sm:space-y-4 p-4 sm:p-6 flex flex-col flex-grow">
                   <div className="h-6 w-3/4 rounded-2xl bg-slate-200 dark:bg-slate-700" />
                   <div className="flex gap-2 flex-wrap">
@@ -58,18 +58,39 @@ function Portfolio() {
             </div>
           ) : (
             projects.map((project) => (
-              <article key={project.name} className="group overflow-hidden rounded-2xl sm:rounded-3xl border border-slate-300 dark:border-white/10 bg-white dark:bg-slate-900/70 shadow-soft transition hover:-translate-y-1 hover:border-cyan-600 dark:hover:border-cyan-400/40 hover:bg-slate-50 dark:hover:bg-slate-900/90 flex flex-col h-full">
-                <div className="h-40 sm:h-48 md:h-56 bg-gradient-to-br from-cyan-600/20 dark:from-cyan-500/20 via-slate-200 dark:via-slate-900/20 to-slate-300 dark:to-slate-950/40 flex-shrink-0"></div>
+              <article key={project.id} className="group overflow-hidden rounded-2xl sm:rounded-3xl border border-slate-300 dark:border-white/10 bg-white dark:bg-slate-900/70 shadow-soft transition hover:-translate-y-1 hover:border-cyan-600 dark:hover:border-cyan-400/40 hover:bg-slate-50 dark:hover:bg-slate-900/90 flex flex-col h-full">
+                <div className="h-40 sm:h-48 md:h-56 bg-gradient-to-br from-cyan-600/20 dark:from-cyan-500/20 via-slate-200 dark:via-slate-900/20 to-slate-300 dark:to-slate-950/40 flex-shrink-0 relative overflow-hidden">
+                  {project.image ? (
+                    <img
+                      src={project.image}
+                      alt={project.name}
+                      className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-cyan-600/20 dark:from-cyan-500/20 via-slate-200 dark:via-slate-900/20 to-slate-300 dark:to-slate-950/40 flex items-center justify-center">
+                      <div className="text-center text-slate-500 dark:text-slate-400">
+                        <svg className="w-12 h-12 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                        <p className="text-xs">No Image</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <div className="space-y-4 p-4 sm:p-6 flex flex-col flex-grow">
                   <div>
                     <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 line-clamp-2">{project.name}</h3>
                   </div>
                   <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                    {project.technologies.slice(0, 4).map((tech) => (
+                    {(Array.isArray(project.technologies)
+                      ? project.technologies
+                      : typeof project.technologies === 'string'
+                      ? project.technologies.split(',').map((tech) => tech.trim()).filter(Boolean)
+                      : []
+                    ).slice(0, 4).map((tech) => (
                       <span key={tech} className="inline-block rounded-full border border-cyan-300 dark:border-cyan-500/30 bg-cyan-50 dark:bg-cyan-900/20 px-2.5 sm:px-3 py-1 text-xs font-medium text-cyan-700 dark:text-cyan-300">{tech}</span>
                     ))}
-                  </div>
-                  <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 line-clamp-3 flex-grow">{project.description}</p>
+                  </div> <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 line-clamp-3 flex-grow text-justify">{project.description}</p>
                   <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2 border-t border-slate-200 dark:border-slate-700/50">
                     <a href={project.demo} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-1.5 rounded-lg sm:rounded-xl bg-cyan-600 dark:bg-cyan-500 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-white dark:text-slate-950 transition hover:bg-cyan-700 dark:hover:bg-cyan-400 flex-1 sm:flex-none min-h-[36px]">
                       <FiExternalLink size={16} /> <span>Demo</span>

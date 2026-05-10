@@ -123,7 +123,7 @@ function Contact() {
                 links.map((item) => {
                   const Icon = iconMap[item.icon] || FiGlobe;
                   return (
-                    <a key={item.label} href={item.href} target="_blank" rel="noreferrer" className="flex items-center gap-2 sm:gap-3 rounded-lg sm:rounded-2xl border border-slate-400 dark:border-slate-700/70 bg-slate-100 dark:bg-slate-900/80 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-slate-700 dark:text-slate-200 transition hover:border-cyan-600 dark:hover:border-cyan-400/60 hover:text-cyan-700 dark:hover:text-cyan-300 hover:bg-slate-50 dark:hover:bg-slate-800">
+                    <a key={item.label} href={item.href} target="_blank" rel="noreferrer" className="btn-secondary w-full text-xs sm:text-sm text-slate-700 dark:text-slate-200">
                       <Icon className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
                       <span className="truncate">{item.label}</span>
                     </a>
@@ -174,14 +174,14 @@ function Contact() {
                 />
               </div>
               {status && (
-                <div className={`rounded-2xl px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm ${status.type === 'success' ? 'bg-emerald-600/15 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-200 border border-emerald-600/30 dark:border-emerald-500/20' : 'bg-rose-600/15 dark:bg-rose-500/15 text-rose-700 dark:text-rose-200 border border-rose-600/30 dark:border-rose-500/20'}`}>
+                <div role="status" aria-live="polite" className={`rounded-2xl px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm ${status.type === 'success' ? 'bg-emerald-600/15 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-200 border border-emerald-600/30 dark:border-emerald-500/20' : 'bg-rose-600/15 dark:bg-rose-500/15 text-rose-700 dark:text-rose-200 border border-rose-600/30 dark:border-rose-500/20'}`}>
                   {status.message}
                 </div>
               )}
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full inline-flex items-center justify-center rounded-2xl bg-cyan-600 dark:bg-cyan-400 px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white dark:text-slate-950 transition hover:bg-cyan-700 dark:hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-70"
+                className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {loading ? 'Mengirim...' : 'Kirim Pesan'}
               </button>

@@ -332,25 +332,25 @@ function About() {
                 </button>
 
                 <div className="flex-1 min-w-0">
-                  <div className="rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-slate-200 dark:border-slate-700/50 bg-white dark:bg-slate-900 shadow-lg">
-                    <div className="aspect-video sm:aspect-[4/3] overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 flex items-center justify-center">
-                      {certificates[certificateIndex]?.image ? (
-                        <img
-                          src={certificates[certificateIndex].image}
-                          alt={certificates[certificateIndex].name}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 flex flex-col items-center justify-center p-4">
-                          <p className="text-center text-sm sm:text-base font-bold text-slate-700 dark:text-slate-300 line-clamp-2">{certificates[certificateIndex]?.name}</p>
-                          {certificates[certificateIndex]?.duration && (
-                            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-3">{certificates[certificateIndex].duration}</p>
-                          )}
-                        </div>
-                      )}
-                    </div>
+                <div className="rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-slate-200 dark:border-slate-700/50 bg-white dark:bg-slate-900 shadow-lg">
+                  <div className="relative overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 flex items-center justify-center min-h-[260px] sm:min-h-[320px]">
+                    {certificates[certificateIndex]?.image ? (
+                      <img
+                        src={certificates[certificateIndex].image}
+                        alt={certificates[certificateIndex].name}
+                        className="max-w-full max-h-[420px] object-contain transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 flex flex-col items-center justify-center p-4">
+                        <p className="text-center text-sm sm:text-base font-bold text-slate-700 dark:text-slate-300 line-clamp-2">{certificates[certificateIndex]?.name}</p>
+                        {certificates[certificateIndex]?.duration && (
+                          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-3">{certificates[certificateIndex].duration}</p>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
+              </div>
 
                 <button
                   onClick={nextCertificate}

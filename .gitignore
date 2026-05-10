@@ -8,3 +8,4 @@ firestore.rules
 .firebaserc
 package-lock.json
 build
+firebase.json
